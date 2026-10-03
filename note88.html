@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="parchment">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOTE88 — Old English Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Grenze+Gotisch:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=MedievalSharp&family=Pirata+One&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THEMES — 3 parchment styles
+   ============================================================ */
+:root, [data-theme="parchment"]{
+  --paper-bg:
+    repeating-linear-gradient(to bottom,
+      transparent 0 45px,
+      rgba(96,72,38,.14) 45px 46px),
+    radial-gradient(ellipse 60% 45% at 18% 12%, rgba(226,200,150,.75), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 84% 88%, rgba(168,126,72,.55), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 60% 40%, rgba(255,244,215,.6), transparent 70%),
+    radial-gradient(circle at 50% 50%, #f4e8c9 0%, #e9d7ac 60%, #d5bb87 100%);
+  --ink:#3a2916;
+  --ink-soft:#7a6242;
+  --line-color:rgba(90,68,36,.25);
+  --accent:#8a5a24;
+  --accent-soft:rgba(138,90,36,.12);
+  --drawer-bg:rgba(246,236,213,.985);
+  --drawer-border:rgba(90,68,36,.3);
+  --grain-opacity:.22;
+  --seal-hue:0;
+}
+[data-theme="vintage"]{
+  --paper-bg:
+    radial-gradient(ellipse 70% 50% at 30% 22%, rgba(224,192,142,.55), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 76% 78%, rgba(96,62,32,.55), transparent 60%),
+    radial-gradient(ellipse 45% 35% at 12% 88%, rgba(70,44,22,.5), transparent 55%),
+    radial-gradient(ellipse 35% 25% at 88% 14%, rgba(150,108,58,.5), transparent 60%),
+    linear-gradient(140deg, #c2a072 0%, #a17f4e 45%, #7c5c34 100%);
+  --ink:#2a1a0a;
+  --ink-soft:#6a4a28;
+  --line-color:rgba(60,38,16,.3);
+  --accent:#5c3a12;
+  --accent-soft:rgba(92,58,18,.16);
+  --drawer-bg:rgba(222,200,164,.985);
+  --drawer-border:rgba(60,38,16,.35);
+  --grain-opacity:.4;
+  --seal-hue:0;
+}
+[data-theme="scroll"]{
+  --paper-bg:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(210,180,130,.7), transparent 65%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(140,100,54,.6), transparent 65%),
+    radial-gradient(ellipse 50% 40% at 20% 50%, rgba(232,208,162,.6), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 82% 55%, rgba(180,142,88,.5), transparent 60%),
+    linear-gradient(180deg, #e0c69c 0%, #cfae7e 45%, #b58f5c 100%);
+  --ink:#33220f;
+  --ink-soft:#6e5228;
+  --line-color:rgba(80,56,26,.22);
+  --accent:#7a4f1c;
+  --accent-soft:rgba(122,79,28,.14);
+  --drawer-bg:rgba(230,210,176,.985);
+  --drawer-border:rgba(80,56,26,.3);
+  --grain-opacity:.3;
+  --seal-hue:0;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0;overflow:hidden}
+
+body{
+  font-family:'IM Fell English','Cairo',Georgia,serif;
+  color:var(--ink);
+  background:var(--paper-bg);
+  background-attachment:fixed;
+  background-size:cover;
+  transition:color .5s ease;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Grain / noise overlay — gives the paper its tooth */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:1;
+  opacity:var(--grain-opacity);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.11  0 0 0 0 0.04  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size:260px 260px;
+  mix-blend-mode:multiply;
+}
+
+/* Subtle vignette around edges */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:1;
+  background:
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 55%, rgba(60,38,12,.22) 100%);
+}
+
+/* ============================================================
+   BRAND
+   ============================================================ */
+.brand{
+  position:fixed;
+  top:16px;left:26px;
+  z-index:20;
+  font-family:'UnifrakturMaguntia',serif;
+  font-size:26px;
+  line-height:1;
+  letter-spacing:.5px;
+  color:var(--accent);
+  text-shadow:0 1px 0 rgba(255,240,200,.55), 0 -1px 1px rgba(60,30,10,.25);
+  opacity:.85;
+  user-select:none;
+  pointer-events:none;
+}
+
+/* ============================================================
+   HAMBURGER
+   ============================================================ */
+.hamburger{
+  position:fixed;
+  top:14px;right:18px;
+  z-index:50;
+  width:46px;height:46px;
+  border-radius:50%;
+  border:1.5px solid var(--line-color);
+  background:var(--accent-soft);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  cursor:pointer;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:5px;
+  padding:0;
+  transition:transform .25s ease, background .25s ease, border-color .25s;
+  outline:none;
+}
+.hamburger:hover{ background:var(--accent); border-color:var(--accent); }
+.hamburger:hover span{ background:#fff8e6; }
+.hamburger span{
+  display:block;
+  width:20px;height:2px;
+  border-radius:2px;
+  background:var(--ink);
+  transition:transform .3s ease, opacity .25s ease, background .25s;
+  transform-origin:center;
+}
+.hamburger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2){ opacity:0; }
+.hamburger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   EDITOR
+   ============================================================ */
+.editor{
+  position:fixed;
+  inset:0;
+  z-index:5;
+  padding:72px max(26px, calc((100vw - 820px) / 2)) 140px;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+
+.note-title{
+  font-family:var(--note-font, 'UnifrakturMaguntia', serif);
+  font-size:calc(var(--note-size, 28px) * 1.5);
+  line-height:1.45;
+  color:var(--ink);
+  background:transparent;
+  border:none;
+  outline:none;
+  width:100%;
+  padding:2px 0 10px;
+  border-bottom:1px dashed var(--line-color);
+  margin-bottom:14px;
+  letter-spacing:.4px;
+  text-shadow:0 1px 0 rgba(255,245,215,.35);
+}
+.note-title::placeholder{
+  color:var(--ink-soft);
+  opacity:.5;
+  font-style:italic;
+}
+
+.note-body{
+  flex:1;
+  min-height:0;
+  font-family:var(--note-font, 'UnifrakturMaguntia', serif);
+  font-size:var(--note-size, 28px);
+  line-height:1.75;
+  color:var(--ink);
+  background:transparent;
+  border:none;
+  outline:none;
+  resize:none;
+  width:100%;
+  padding:0;
+  overflow-y:auto;
+  letter-spacing:.3px;
+  text-shadow:0 1px 0 rgba(255,245,215,.3);
+}
+.note-body::placeholder{
+  color:var(--ink-soft);
+  opacity:.5;
+  font-style:italic;
+}
+
+/* Scrollbars */
+.note-body::-webkit-scrollbar{ width:9px; }
+.note-body::-webkit-scrollbar-track{ background:transparent; }
+.note-body::-webkit-scrollbar-thumb{
+  background:var(--line-color);
+  border-radius:10px;
+  border:2px solid transparent;
+  background-clip:content-box;
+}
+
+/* ============================================================
+   WAX SEAL — MC88 signature & copyright
+   ============================================================ */
+.seal-wrap{
+  position:fixed;
+  bottom:22px;
+  right:26px;
+  width:104px;
+  height:104px;
+  z-index:15;
+  transform:rotate(-8deg);
+  filter:drop-shadow(0 8px 12px rgba(40,10,0,.45));
+  pointer-events:none;
+  user-select:none;
+  animation:sealDrop .9s cubic-bezier(.2,1.3,.4,1) .3s both;
+}
+@keyframes sealDrop{
+  0%{ opacity:0; transform:rotate(-25deg) scale(2.2) translateY(-40px); }
+  60%{ opacity:1; }
+  100%{ opacity:1; transform:rotate(-8deg) scale(1) translateY(0); }
+}
+.seal{ width:100%; height:100%; display:block; }
+
+@media (max-width:640px){
+  .seal-wrap{ width:74px; height:74px; bottom:14px; right:14px; }
+  .brand{ font-size:21px; left:18px; top:14px; }
+  .editor{ padding:64px 20px 110px; }
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+.overlay{
+  position:fixed;inset:0;
+  z-index:35;
+  background:rgba(35,22,8,.4);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+.overlay.show{ opacity:1; pointer-events:auto; }
+
+/* ============================================================
+   DRAWER
+   ============================================================ */
+.drawer{
+  position:fixed;
+  top:0;right:0;bottom:0;
+  width:min(370px, 90vw);
+  z-index:40;
+  background:var(--drawer-bg);
+  border-left:1px solid var(--drawer-border);
+  box-shadow:-24px 0 60px rgba(30,15,0,.35);
+  transform:translateX(105%);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  display:flex;
+  flex-direction:column;
+  padding:22px 20px 16px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  font-family:'IM Fell English',Georgia,serif;
+}
+.drawer.open{ transform:translateX(0); }
+
+.drawer::-webkit-scrollbar{ width:8px; }
+.drawer::-webkit-scrollbar-track{ background:transparent; }
+.drawer::-webkit-scrollbar-thumb{
+  background:var(--line-color);
+  border-radius:8px;
+  border:2px solid transparent;
+  background-clip:content-box;
+}
+
+.drawer-title{
+  font-family:'UnifrakturMaguntia',serif;
+  font-size:32px;
+  color:var(--accent);
+  margin:0 0 2px;
+  line-height:1;
+  letter-spacing:.5px;
+}
+.drawer-sub{
+  font-size:11.5px;
+  font-style:italic;
+  color:var(--ink-soft);
+  margin:0 0 20px;
+  letter-spacing:.4px;
+}
+
+.d-section{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:var(--ink-soft);
+  margin:18px 0 8px;
+  opacity:.75;
+  font-family:'Cairo',sans-serif;
+  font-weight:600;
+}
+.d-section:first-of-type{ margin-top:6px; }
+
+.d-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+select{
+  flex:1;
+  font:inherit;
+  font-size:14px;
+  padding:9px 11px;
+  border-radius:9px;
+  border:1px solid var(--line-color);
+  background:rgba(255,250,238,.65);
+  color:var(--ink);
+  outline:none;
+  cursor:pointer;
+  transition:border-color .2s;
+  min-width:0;
+}
+select:focus{ border-color:var(--accent); }
+
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;
+  flex:1;
+  height:4px;
+  border-radius:4px;
+  background:var(--line-color);
+  outline:none;
+  cursor:pointer;
+  min-width:0;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:16px;height:16px;
+  border-radius:50%;
+  background:var(--accent);
+  border:2px solid #fff8e6;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+  cursor:pointer;
+}
+input[type="range"]::-moz-range-thumb{
+  width:14px;height:14px;
+  border-radius:50%;
+  background:var(--accent);
+  border:2px solid #fff8e6;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+  cursor:pointer;
+}
+
+.size-val{
+  font-family:'Cairo',sans-serif;
+  font-size:11.5px;
+  color:var(--ink-soft);
+  min-width:38px;
+  text-align:center;
+  font-weight:600;
+}
+
+/* Theme buttons */
+.themes{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+}
+.theme-btn{
+  border:1.5px solid var(--line-color);
+  border-radius:10px;
+  padding:8px 6px 9px;
+  background:transparent;
+  cursor:pointer;
+  font:inherit;
+  font-size:11px;
+  color:var(--ink);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  transition:.2s;
+  font-family:'Cairo',sans-serif;
+  font-weight:600;
+}
+.theme-btn:hover{ border-color:var(--accent); }
+.theme-btn.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  box-shadow:inset 0 0 0 1px var(--accent);
+}
+.swatch{
+  width:100%;
+  height:26px;
+  border-radius:6px;
+  border:1px solid rgba(60,38,16,.25);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.12);
+}
+.swatch.parchment{
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 5px, rgba(96,72,38,.3) 5px 6px),
+    linear-gradient(135deg,#f4e8c9,#d5bb87);
+}
+.swatch.vintage{
+  background:linear-gradient(140deg,#c2a072,#7c5c34);
+}
+.swatch.scroll{
+  background:linear-gradient(180deg,#e0c69c,#b58f5c);
+}
+
+/* Buttons */
+.btn{
+  font-family:'Cairo',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1.5px solid var(--line-color);
+  background:rgba(255,250,238,.5);
+  color:var(--ink);
+  cursor:pointer;
+  transition:.2s;
+  white-space:nowrap;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.btn:hover{ border-color:var(--accent); color:var(--accent); }
+.btn.primary{
+  background:var(--accent);
+  color:#fff8e6;
+  border-color:var(--accent);
+}
+.btn.primary:hover{ opacity:.88; color:#fff8e6; }
+.btn.danger:hover{ color:#a32a1a; border-color:#a32a1a; }
+.btn-row{ display:flex; gap:8px; }
+.btn-row .btn{ flex:1; }
+
+/* Notes list */
+.notes-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:240px;
+  overflow-y:auto;
+  padding:2px;
+  margin:0 -4px;
+}
+.notes-list::-webkit-scrollbar{ width:7px; }
+.notes-list::-webkit-scrollbar-thumb{
+  background:var(--line-color);
+  border-radius:7px;
+  border:2px solid transparent;
+  background-clip:content-box;
+}
+
+.note-item{
+  text-align:left;
+  background:transparent;
+  border:1.5px solid transparent;
+  border-radius:10px;
+  padding:9px 11px;
+  cursor:pointer;
+  font:inherit;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  transition:.18s;
+  min-width:0;
+}
+.note-item:hover{ background:var(--accent-soft); }
+.note-item.active{
+  background:var(--accent-soft);
+  border-color:var(--line-color);
+}
+.ni-title{
+  font-family:'UnifrakturMaguntia',serif;
+  font-size:16px;
+  line-height:1.15;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:var(--ink);
+}
+.ni-prev{
+  font-size:11.5px;
+  font-style:italic;
+  color:var(--ink-soft);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-family:'IM Fell English',serif;
+}
+.ni-date{
+  font-size:10px;
+  font-family:'Cairo',sans-serif;
+  color:var(--ink-soft);
+  opacity:.7;
+}
+.empty-msg{
+  font-size:12.5px;
+  font-style:italic;
+  color:var(--ink-soft);
+  text-align:center;
+  padding:16px 0;
+  opacity:.7;
+}
+
+/* Credit footer of drawer */
+.credit{
+  margin-top:auto;
+  padding-top:18px;
+  border-top:1px dashed var(--line-color);
+  text-align:center;
+  font-family:'Cairo',sans-serif;
+  font-size:11px;
+  color:var(--ink-soft);
+  letter-spacing:.3px;
+  line-height:1.7;
+}
+.credit a{
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px dotted var(--accent);
+}
+.credit .mc{
+  font-family:'UnifrakturMaguntia',serif;
+  font-size:15px;
+  color:var(--accent);
+  display:block;
+  margin-top:3px;
+  letter-spacing:1px;
+}
+
+/* Divider */
+.divider{
+  height:1px;
+  background:var(--line-color);
+  margin:16px 0;
+  opacity:.6;
+}
+</style>
+</head>
+<body>
+
+<!-- ================= BRAND ================= -->
+<div class="brand">NOTE88</div>
+
+<!-- ================= HAMBURGER ================= -->
+<button class="hamburger" id="hamburger" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- ================= EDITOR ================= -->
+<main class="editor">
+  <input id="title" class="note-title" type="text" placeholder="Title…" dir="auto" spellcheck="false" autocomplete="off">
+  <textarea id="body" class="note-body" placeholder="Write something…" dir="auto" spellcheck="false"></textarea>
+</main>
+
+<!-- ================= WAX SEAL — MC88 signature / copyright ================= -->
+<div class="seal-wrap" title="MC88 — © 2026">
+  <svg class="seal" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="wax" cx="36%" cy="30%" r="78%">
+        <stop offset="0%"   stop-color="#e05a48"/>
+        <stop offset="35%"  stop-color="#b5251a"/>
+        <stop offset="75%"  stop-color="#7d1008"/>
+        <stop offset="100%" stop-color="#4d0603"/>
+      </radialGradient>
+      <radialGradient id="waxHighlight" cx="34%" cy="26%" r="60%">
+        <stop offset="0%"  stop-color="rgba(255,190,160,.75)"/>
+        <stop offset="55%" stop-color="rgba(255,190,160,0)"/>
+      </radialGradient>
+      <radialGradient id="waxInner" cx="40%" cy="35%" r="75%">
+        <stop offset="0%"  stop-color="#a01c11"/>
+        <stop offset="100%" stop-color="#5e0a05"/>
+      </radialGradient>
+      <filter id="waxEdge" x="-25%" y="-25%" width="150%" height="150%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.048" numOctaves="4" seed="9" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="waxNoise" x="-25%" y="-25%" width="150%" height="150%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n"/>
+        <feColorMatrix in="n" type="matrix"
+          values="0 0 0 0 0.12
+                  0 0 0 0 0.02
+                  0 0 0 0 0.01
+                  0 0 0 0.35 0"/>
+        <feComposite in2="SourceGraphic" operator="in"/>
+      </filter>
+      <filter id="waxShadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"/>
+        <feOffset dx="1" dy="3" result="o"/>
+        <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Outer wax blob -->
+    <g filter="url(#waxShadow)">
+      <circle cx="70" cy="70" r="54" fill="url(#wax)" filter="url(#waxEdge)"/>
+    </g>
+
+    <!-- Grain texture clipped to the blob -->
+    <circle cx="70" cy="70" r="54" fill="#7d1008" filter="url(#waxNoise)" opacity=".55"/>
+
+    <!-- Inner pressed disc -->
+    <circle cx="70" cy="70" r="39" fill="url(#waxInner)"/>
+    <circle cx="70" cy="70" r="39" fill="none" stroke="#3d0603" stroke-width="2.5" opacity=".85"/>
+    <circle cx="70" cy="70" r="37" fill="none" stroke="#e08a72" stroke-width="1" opacity=".35"/>
+
+    <!-- Engraved MC88 -->
+    <text x="70" y="79"
+          text-anchor="middle"
+          font-family="'UnifrakturCook','UnifrakturMaguntia',serif"
+          font-size="27"
+          font-weight="700"
+          letter-spacing="1.5"
+          fill="#3d0603"
+          opacity=".95">MC88</text>
+    <text x="70" y="78"
+          text-anchor="middle"
+          font-family="'UnifrakturCook','UnifrakturMaguntia',serif"
+          font-size="27"
+          font-weight="700"
+          letter-spacing="1.5"
+          fill="#e89a86"
+          opacity=".28">MC88</text>
+
+    <!-- Wet highlight -->
+    <ellipse cx="52" cy="46" rx="28" ry="19" fill="url(#waxHighlight)"/>
+  </svg>
+</div>
+
+<!-- ================= OVERLAY ================= -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ================= DRAWER ================= -->
+<aside class="drawer" id="drawer">
+
+  <h1 class="drawer-title">NOTE88</h1>
+  <p class="drawer-sub">Old English notes — kept in your browser</p>
+
+  <div class="d-section">Typeface</div>
+  <div class="d-row">
+    <select id="fontSelect"></select>
+  </div>
+
+  <div class="d-section">Size</div>
+  <div class="d-row">
+    <input id="sizeRange" type="range" min="18" max="60" step="1">
+    <span class="size-val" id="sizeVal">28px</span>
+  </div>
+
+  <div class="d-section">Paper</div>
+  <div class="themes" id="themes">
+    <button class="theme-btn active" data-theme="parchment">
+      <span class="swatch parchment"></span>Parchment
+    </button>
+    <button class="theme-btn" data-theme="vintage">
+      <span class="swatch vintage"></span>Vintage
+    </button>
+    <button class="theme-btn" data-theme="scroll">
+      <span class="swatch scroll"></span>Scroll
+    </button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="d-section">Notes</div>
+  <div class="btn-row" style="margin-bottom:10px">
+    <button class="btn primary" id="newNote">＋ New</button>
+    <button class="btn danger" id="delNote" style="flex:0 0 auto;padding:10px 14px">🗑</button>
+  </div>
+  <div class="notes-list" id="notesList"></div>
+
+  <div class="divider"></div>
+
+  <div class="btn-row">
+    <button class="btn" id="exportBtn">⬇ Export .txt</button>
+    <button class="btn" id="importBtn">⬆ Import</button>
+  </div>
+  <input type="file" id="fileInput" accept=".txt,text/plain" hidden>
+
+  <div class="credit">
+    <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a>
+    <span class="mc">by MC88</span>
+  </div>
+</aside>
+
+<script>
+/* ============================================================
+   FONTS — English / Old English first, always default
+   ============================================================ */
+const FONTS = [
+  { id:'unifraktur',  name:'Old English · UnifrakturMaguntia', css:"'UnifrakturMaguntia', 'IM Fell English', serif" },
+  { id:'unifrakturcook', name:'Old English · UnifrakturCook',  css:"'UnifrakturCook', 'IM Fell English', serif" },
+  { id:'pirata',      name:'Blackletter · Pirata One',         css:"'Pirata One', 'IM Fell English', serif" },
+  { id:'grenze',      name:'Gotisch · Grenze Gotisch',         css:"'Grenze Gotisch', 'IM Fell English', serif" },
+  { id:'medieval',    name:'Medieval · MedievalSharp',         css:"'MedievalSharp', 'IM Fell English', serif" },
+  { id:'cinzel',      name:'Roman Caps · Cinzel Decorative',   css:"'Cinzel Decorative', 'IM Fell English', serif" },
+  { id:'fell',        name:'Antique Print · IM Fell English',  css:"'IM Fell English', Georgia, serif" },
+  { id:'plain',       name:'Plain · Sans-serif',               css:"Georgia, 'Times New Roman', serif" }
+];
+
+const THEMES = ['parchment','vintage','scroll'];
+const LS_KEY = 'note88_v1';
+
+const state = {
+  notes: [],
+  activeId: null,
+  font: 'unifraktur',
+  size: 28,
+  theme: 'parchment'
+};
+
+const $ = s => document.querySelector(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+function load(){
+  let raw = null;
+  try { raw = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch(e){ raw = null; }
+
+  if (raw && Array.isArray(raw.notes) && raw.notes.length){
+    state.notes    = raw.notes;
+    state.activeId = raw.activeId;
+    state.font     = raw.font  || state.font;
+    state.size     = raw.size  || state.size;
+    state.theme    = THEMES.includes(raw.theme) ? raw.theme : state.theme;
+  } else {
+    const id = uid();
+    state.notes = [{
+      id,
+      title: 'Welcome to NOTE88',
+      body: 'Write here as you please.\n\nEvery keystroke is saved automatically in your browser — even after you close this page.\n\nUse the menu at the top-right to change the Old English typeface, the writing size, the paper, and to manage your notes.\n\nWhen you export to .txt the text is stored plainly, as any text file should be — the Old English face is only for the screen.',
+      updated: Date.now()
+    }];
+    state.activeId = id;
+  }
+
+  if (!state.notes.some(n => n.id === state.activeId)){
+    state.activeId = state.notes[0].id;
+  }
+}
+
+function persist(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      notes: state.notes,
+      activeId: state.activeId,
+      font: state.font,
+      size: state.size,
+      theme: state.theme
+    }));
+  }catch(e){ /* storage full / disabled */ }
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const current = () => state.notes.find(n => n.id === state.activeId);
+
+function noteLabel(n){
+  const t = (n.title || '').trim();
+  if (t) return t;
+  const first = (n.body || '').split('\n').find(l => l.trim());
+  return first ? first.trim().slice(0,42) : 'Untitled';
+}
+
+function preview(n){
+  const p = (n.body || '').replace(/\s+/g,' ').trim();
+  return p ? p.slice(0,64) : '—';
+}
+
+function fmtDate(ts){
+  const d = new Date(ts), now = new Date();
+  if (d.toDateString() === now.toDateString()){
+    return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  }
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderNotes(){
+  const list = $('#notesList');
+  list.innerHTML = '';
+
+  const items = state.notes.slice().sort((a,b) => b.updated - a.updated);
+  if (!items.length){
+    const p = document.createElement('p');
+    p.className = 'empty-msg';
+    p.textContent = 'No notes yet';
+    list.appendChild(p);
+    return;
+  }
+
+  for (const n of items){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'note-item' + (n.id === state.activeId ? ' active' : '');
+
+    const t = document.createElement('span');
+    t.className = 'ni-title'; t.textContent = noteLabel(n);
+
+    const p = document.createElement('span');
+    p.className = 'ni-prev'; p.textContent = preview(n);
+
+    const d = document.createElement('span');
+    d.className = 'ni-date'; d.textContent = fmtDate(n.updated);
+
+    btn.append(t, p, d);
+    btn.addEventListener('click', () => openNote(n.id));
+    list.appendChild(btn);
+  }
+}
+
+function openNote(id){
+  state.activeId = id;
+  const n = current();
+  if (!n) return;
+  $('#title').value = n.title;
+  $('#body').value  = n.body;
+  renderNotes();
+  persist();
+}
+
+function applyPrefs(){
+  const f = FONTS.find(x => x.id === state.font) || FONTS[0];
+  document.documentElement.style.setProperty('--note-font', f.css);
+  document.documentElement.style.setProperty('--note-size', state.size + 'px');
+  document.documentElement.dataset.theme = state.theme;
+
+  $('#fontSelect').value = state.font;
+  $('#sizeRange').value  = state.size;
+  $('#sizeVal').textContent = state.size + 'px';
+
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === state.theme);
+  });
+}
+
+/* ============================================================
+   AUTOSAVE
+   ============================================================ */
+let saveTimer = null;
+function saveSoon(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persist, 400);
+}
+
+/* ============================================================
+   DRAWER
+   ============================================================ */
+function openDrawer(){
+  $('#drawer').classList.add('open');
+  $('#overlay').classList.add('show');
+  $('#hamburger').classList.add('open');
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('open');
+  $('#overlay').classList.remove('show');
+  $('#hamburger').classList.remove('open');
+}
+function toggleDrawer(){
+  $('#drawer').classList.contains('open') ? closeDrawer() : openDrawer();
+}
+
+/* ============================================================
+   BIND
+   ============================================================ */
+function bind(){
+  // Fill font dropdown
+  const sel = $('#fontSelect');
+  FONTS.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f.id;
+    o.textContent = f.name;
+    o.style.fontFamily = f.css;
+    sel.appendChild(o);
+  });
+
+  // Hamburger / overlay
+  $('#hamburger').addEventListener('click', toggleDrawer);
+  $('#overlay').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Font
+  sel.addEventListener('change', e => {
+    state.font = e.target.value;
+    applyPrefs();
+    persist();
+  });
+
+  // Size
+  $('#sizeRange').addEventListener('input', e => {
+    state.size = +e.target.value;
+    applyPrefs();
+    saveSoon();
+  });
+
+  // Theme
+  $('#themes').addEventListener('click', e => {
+    const btn = e.target.closest('.theme-btn');
+    if (!btn) return;
+    state.theme = btn.dataset.theme;
+    applyPrefs();
+    persist();
+  });
+
+  // Title / body
+  $('#title').addEventListener('input', e => {
+    const n = current(); if (!n) return;
+    n.title = e.target.value;
+    n.updated = Date.now();
+    renderNotes();
+    saveSoon();
+  });
+  $('#body').addEventListener('input', e => {
+    const n = current(); if (!n) return;
+    n.body = e.target.value;
+    n.updated = Date.now();
+    saveSoon();
+  });
+
+  // New note
+  $('#newNote').addEventListener('click', () => {
+    const n = { id: uid(), title: '', body: '', updated: Date.now() };
+    state.notes.unshift(n);
+    openNote(n.id);
+    closeDrawer();
+    setTimeout(() => $('#title').focus(), 350);
+  });
+
+  // Delete note
+  $('#delNote').addEventListener('click', () => {
+    const n = current(); if (!n) return;
+    if (!confirm('Delete this note permanently?')) return;
+    state.notes = state.notes.filter(x => x.id !== n.id);
+    if (!state.notes.length){
+      state.notes.push({ id: uid(), title: '', body: '', updated: Date.now() });
+    }
+    state.activeId = state.notes.slice().sort((a,b)=>b.updated-a.updated)[0].id;
+    openNote(state.activeId);
+  });
+
+  // Export
+  $('#exportBtn').addEventListener('click', () => {
+    const n = current(); if (!n) return;
+    const text = (n.title.trim() ? n.title.trim() + '\n\n' : '') + n.body;
+    const blob = new Blob([text], { type:'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (n.title.trim() || 'note')
+      .replace(/[\\/:*?"<>|]/g,'_')
+      .slice(0,40) + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  });
+
+  // Import
+  $('#importBtn').addEventListener('click', () => $('#fileInput').click());
+  $('#fileInput').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const text = String(r.result || '');
+      const lines = text.split('\n');
+      let title = '', body = text;
+      if (lines.length > 1 && lines[0].trim().length <= 70 && !lines[1].trim()){
+        title = lines[0].trim();
+        body  = lines.slice(2).join('\n');
+      }
+      const n = { id: uid(), title, body, updated: Date.now() };
+      state.notes.unshift(n);
+      openNote(n.id);
+      closeDrawer();
+    };
+    r.readAsText(f, 'utf-8');
+    e.target.value = '';
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 's'){
+      e.preventDefault();
+      const n = current(); if (n) n.updated = Date.now();
+      persist();
+    }
+    if (mod && e.key.toLowerCase() === 'n'){
+      e.preventDefault();
+      $('#newNote').click();
+    }
+  });
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+load();
+bind();
+applyPrefs();
+openNote(state.activeId);
+</script>
+</body>
+</html>
