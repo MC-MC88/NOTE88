@@ -6,7 +6,7 @@
 <title>NOTE88 — Old English Notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Grenze+Gotisch:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=MedievalSharp&family=Pirata+One&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel+Decorative:wght@400;700&family=Grenze+Gotisch:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=MedievalSharp&family=Pirata+One&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    THEMES — 3 parchment styles
@@ -78,7 +78,6 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* Grain / noise overlay — gives the paper its tooth */
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -90,7 +89,6 @@ body::before{
   mix-blend-mode:multiply;
 }
 
-/* Subtle vignette around edges */
 body::after{
   content:'';
   position:fixed;inset:0;
@@ -164,6 +162,11 @@ body::after{
   display:flex;
   flex-direction:column;
   min-height:0;
+  transition:padding-bottom .35s cubic-bezier(.4,0,.2,1);
+}
+
+body.vkbd-open .editor{
+  padding-bottom:320px;
 }
 
 .note-title{
@@ -210,7 +213,6 @@ body::after{
   font-style:italic;
 }
 
-/* Scrollbars */
 .note-body::-webkit-scrollbar{ width:9px; }
 .note-body::-webkit-scrollbar-track{ background:transparent; }
 .note-body::-webkit-scrollbar-thumb{
@@ -221,7 +223,7 @@ body::after{
 }
 
 /* ============================================================
-   WAX SEAL — MC88 signature & copyright
+   WAX SEAL
    ============================================================ */
 .seal-wrap{
   position:fixed;
@@ -235,6 +237,7 @@ body::after{
   pointer-events:none;
   user-select:none;
   animation:sealDrop .9s cubic-bezier(.2,1.3,.4,1) .3s both;
+  transition:bottom .35s cubic-bezier(.4,0,.2,1);
 }
 @keyframes sealDrop{
   0%{ opacity:0; transform:rotate(-25deg) scale(2.2) translateY(-40px); }
@@ -247,6 +250,7 @@ body::after{
   .seal-wrap{ width:74px; height:74px; bottom:14px; right:14px; }
   .brand{ font-size:21px; left:18px; top:14px; }
   .editor{ padding:64px 20px 110px; }
+  body.vkbd-open .editor{ padding-bottom:280px; }
 }
 
 /* ============================================================
@@ -383,7 +387,6 @@ input[type="range"]::-moz-range-thumb{
   font-weight:600;
 }
 
-/* Theme buttons */
 .themes{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -431,7 +434,61 @@ input[type="range"]::-moz-range-thumb{
   background:linear-gradient(180deg,#e0c69c,#b58f5c);
 }
 
-/* Buttons */
+/* Virtual keyboard toggle */
+.vkbd-toggle{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:11px 13px;
+  background:rgba(255,250,238,.4);
+  border:1.5px solid var(--line-color);
+  border-radius:10px;
+  cursor:pointer;
+  font:inherit;
+  color:var(--ink);
+  text-align:left;
+  transition:all .2s ease;
+}
+.vkbd-toggle:hover{ border-color:var(--accent); background:var(--accent-soft); }
+.vkbd-toggle.on{
+  background:var(--accent);
+  color:#fff8e6;
+  border-color:var(--accent);
+}
+.vkbd-toggle-icon{
+  font-size:20px;
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border-radius:8px;
+  background:var(--accent-soft);
+  flex:0 0 auto;
+  transition:background .2s;
+}
+.vkbd-toggle.on .vkbd-toggle-icon{
+  background:rgba(255,248,230,.18);
+}
+.vkbd-toggle-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+  flex:1;
+}
+.vkbd-toggle-title{
+  font-family:'Cairo',sans-serif;
+  font-weight:700;
+  font-size:13px;
+}
+.vkbd-toggle-sub{
+  font-family:'IM Fell English',Georgia,serif;
+  font-style:italic;
+  font-size:11.5px;
+  color:var(--ink-soft);
+  transition:color .2s;
+}
+.vkbd-toggle.on .vkbd-toggle-sub{ color:rgba(255,248,230,.8); }
+
 .btn{
   font-family:'Cairo',sans-serif;
   font-size:13px;
@@ -460,7 +517,6 @@ input[type="range"]::-moz-range-thumb{
 .btn-row{ display:flex; gap:8px; }
 .btn-row .btn{ flex:1; }
 
-/* Notes list */
 .notes-list{
   display:flex;
   flex-direction:column;
@@ -531,7 +587,6 @@ input[type="range"]::-moz-range-thumb{
   opacity:.7;
 }
 
-/* Credit footer of drawer */
 .credit{
   margin-top:auto;
   padding-top:18px;
@@ -557,12 +612,114 @@ input[type="range"]::-moz-range-thumb{
   letter-spacing:1px;
 }
 
-/* Divider */
 .divider{
   height:1px;
   background:var(--line-color);
   margin:16px 0;
   opacity:.6;
+}
+
+/* ============================================================
+   VIRTUAL ARABIC KEYBOARD
+   ============================================================ */
+.vkbd{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:30;
+  padding:12px 16px 16px;
+  background:var(--drawer-bg);
+  border-top:1px solid var(--drawer-border);
+  box-shadow:0 -14px 40px rgba(30,15,0,.3);
+  transform:translateY(110%);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  display:flex;
+  justify-content:center;
+  will-change:transform;
+}
+.vkbd.show{ transform:translateY(0); }
+
+.vkbd-inner{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  width:100%;
+  max-width:660px;
+}
+
+.vkbd-row{
+  display:flex;
+  gap:5px;
+}
+
+.vkbd-key{
+  flex:1 1 0;
+  min-width:0;
+  height:42px;
+  padding:0;
+  border:1px solid var(--line-color);
+  background:rgba(255,250,238,.55);
+  color:var(--ink);
+  border-radius:7px;
+  font-family:'Amiri','IM Fell English',Georgia,serif;
+  font-size:22px;
+  font-weight:700;
+  line-height:1;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background .12s ease, border-color .15s ease, transform .08s ease;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.vkbd-key:hover{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+}
+.vkbd-key:active{
+  transform:scale(.93);
+  background:var(--accent);
+  color:#fff8e6;
+  border-color:var(--accent);
+}
+
+.vkbd-key.small{
+  font-size:15px;
+  font-family:'Cairo',sans-serif;
+  font-weight:600;
+}
+
+.vkbd-key.space{
+  flex:4 1 0;
+  font-family:'Cairo',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1.5px;
+}
+
+.vkbd-key.back{
+  flex:2 1 0;
+  font-family:'Cairo',sans-serif;
+  font-size:15px;
+  font-weight:600;
+}
+
+@media (max-width:640px){
+  .vkbd{ padding:8px 8px 12px; }
+  .vkbd-inner{ gap:4px; }
+  .vkbd-row{ gap:4px; }
+  .vkbd-key{
+    height:36px;
+    font-size:18px;
+    border-radius:6px;
+  }
+  .vkbd-key.small{ font-size:13px; }
+  .vkbd-key.space{ font-size:11px; }
+  .vkbd-key.back{ font-size:14px; }
+}
+
+@media (max-width:400px){
+  .vkbd-key{ height:34px; font-size:16px; }
 }
 </style>
 </head>
@@ -582,7 +739,7 @@ input[type="range"]::-moz-range-thumb{
   <textarea id="body" class="note-body" placeholder="Write something…" dir="auto" spellcheck="false"></textarea>
 </main>
 
-<!-- ================= WAX SEAL — MC88 signature / copyright ================= -->
+<!-- ================= WAX SEAL ================= -->
 <div class="seal-wrap" title="MC88 — © 2026">
   <svg class="seal" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -620,41 +777,28 @@ input[type="range"]::-moz-range-thumb{
         <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-
-    <!-- Outer wax blob -->
     <g filter="url(#waxShadow)">
       <circle cx="70" cy="70" r="54" fill="url(#wax)" filter="url(#waxEdge)"/>
     </g>
-
-    <!-- Grain texture clipped to the blob -->
     <circle cx="70" cy="70" r="54" fill="#7d1008" filter="url(#waxNoise)" opacity=".55"/>
-
-    <!-- Inner pressed disc -->
     <circle cx="70" cy="70" r="39" fill="url(#waxInner)"/>
     <circle cx="70" cy="70" r="39" fill="none" stroke="#3d0603" stroke-width="2.5" opacity=".85"/>
     <circle cx="70" cy="70" r="37" fill="none" stroke="#e08a72" stroke-width="1" opacity=".35"/>
-
-    <!-- Engraved MC88 -->
-    <text x="70" y="79"
-          text-anchor="middle"
+    <text x="70" y="79" text-anchor="middle"
           font-family="'UnifrakturCook','UnifrakturMaguntia',serif"
-          font-size="27"
-          font-weight="700"
-          letter-spacing="1.5"
-          fill="#3d0603"
-          opacity=".95">MC88</text>
-    <text x="70" y="78"
-          text-anchor="middle"
+          font-size="27" font-weight="700" letter-spacing="1.5"
+          fill="#3d0603" opacity=".95">MC88</text>
+    <text x="70" y="78" text-anchor="middle"
           font-family="'UnifrakturCook','UnifrakturMaguntia',serif"
-          font-size="27"
-          font-weight="700"
-          letter-spacing="1.5"
-          fill="#e89a86"
-          opacity=".28">MC88</text>
-
-    <!-- Wet highlight -->
+          font-size="27" font-weight="700" letter-spacing="1.5"
+          fill="#e89a86" opacity=".28">MC88</text>
     <ellipse cx="52" cy="46" rx="28" ry="19" fill="url(#waxHighlight)"/>
   </svg>
+</div>
+
+<!-- ================= VIRTUAL ARABIC KEYBOARD ================= -->
+<div class="vkbd" id="vkbd" aria-hidden="true">
+  <div class="vkbd-inner" id="vkbdInner"></div>
 </div>
 
 <!-- ================= OVERLAY ================= -->
@@ -690,6 +834,15 @@ input[type="range"]::-moz-range-thumb{
     </button>
   </div>
 
+  <div class="d-section">Keyboard</div>
+  <button class="vkbd-toggle" id="vkbdToggle" type="button">
+    <span class="vkbd-toggle-icon" id="vkbdToggleIcon">⌨</span>
+    <span class="vkbd-toggle-text">
+      <span class="vkbd-toggle-title">Arabic Keyboard</span>
+      <span class="vkbd-toggle-sub" id="vkbdToggleSub">Tap to show</span>
+    </span>
+  </button>
+
   <div class="divider"></div>
 
   <div class="d-section">Notes</div>
@@ -715,7 +868,7 @@ input[type="range"]::-moz-range-thumb{
 
 <script>
 /* ============================================================
-   FONTS — English / Old English first, always default
+   FONTS
    ============================================================ */
 const FONTS = [
   { id:'unifraktur',  name:'Old English · UnifrakturMaguntia', css:"'UnifrakturMaguntia', 'IM Fell English', serif" },
@@ -736,7 +889,8 @@ const state = {
   activeId: null,
   font: 'unifraktur',
   size: 28,
-  theme: 'parchment'
+  theme: 'parchment',
+  vkbd: false
 };
 
 const $ = s => document.querySelector(s);
@@ -755,12 +909,13 @@ function load(){
     state.font     = raw.font  || state.font;
     state.size     = raw.size  || state.size;
     state.theme    = THEMES.includes(raw.theme) ? raw.theme : state.theme;
+    state.vkbd     = !!raw.vkbd;
   } else {
     const id = uid();
     state.notes = [{
       id,
       title: 'Welcome to NOTE88',
-      body: 'Write here as you please.\n\nEvery keystroke is saved automatically in your browser — even after you close this page.\n\nUse the menu at the top-right to change the Old English typeface, the writing size, the paper, and to manage your notes.\n\nWhen you export to .txt the text is stored plainly, as any text file should be — the Old English face is only for the screen.',
+      body: 'Write here as you please.\n\nEvery keystroke is saved automatically in your browser — even after you close this page.\n\nUse the menu at the top-right to change the Old English typeface, the writing size, the paper, and to manage your notes.\n\nYou can also enable a virtual Arabic keyboard from the menu, if you want to type Arabic without switching your system layout.\n\nWhen you export to .txt the text is stored plainly, as any text file should be — the Old English face is only for the screen.',
       updated: Date.now()
     }];
     state.activeId = id;
@@ -778,9 +933,10 @@ function persist(){
       activeId: state.activeId,
       font: state.font,
       size: state.size,
-      theme: state.theme
+      theme: state.theme,
+      vkbd: state.vkbd
     }));
-  }catch(e){ /* storage full / disabled */ }
+  }catch(e){}
 }
 
 /* ============================================================
@@ -809,7 +965,7 @@ function fmtDate(ts){
 }
 
 /* ============================================================
-   RENDER
+   RENDER NOTES
    ============================================================ */
 function renderNotes(){
   const list = $('#notesList');
@@ -896,10 +1052,132 @@ function toggleDrawer(){
 }
 
 /* ============================================================
+   VIRTUAL ARABIC KEYBOARD
+   ============================================================ */
+const VKBD_LAYOUT = [
+  ['ض','ص','ث','ق','ف','غ','ع','ه','خ','ح','ج'],
+  ['ش','س','ي','ب','ل','ا','ت','ن','م','ك','د'],
+  ['ذ','ر','ز','ط','ظ','ء','ئ','ؤ','ة','ى','و']
+];
+const VKBD_TASHKEEL = ['َ','ُ','ِ','ْ','ّ'];
+
+let lastFocused = null;
+
+function buildKeyboard(){
+  const inner = $('#vkbdInner');
+  inner.innerHTML = '';
+
+  VKBD_LAYOUT.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'vkbd-row';
+    row.forEach(ch => {
+      const key = document.createElement('button');
+      key.type = 'button';
+      key.className = 'vkbd-key';
+      key.textContent = ch;
+      key.dataset.insert = ch;
+      rowEl.appendChild(key);
+    });
+    inner.appendChild(rowEl);
+  });
+
+  const bottom = document.createElement('div');
+  bottom.className = 'vkbd-row';
+
+  VKBD_TASHKEEL.forEach(ch => {
+    const key = document.createElement('button');
+    key.type = 'button';
+    key.className = 'vkbd-key small';
+    key.textContent = ch;
+    key.dataset.insert = ch;
+    bottom.appendChild(key);
+  });
+
+  const space = document.createElement('button');
+  space.type = 'button';
+  space.className = 'vkbd-key space';
+  space.textContent = 'SPACE';
+  space.dataset.insert = ' ';
+  bottom.appendChild(space);
+
+  const back = document.createElement('button');
+  back.type = 'button';
+  back.className = 'vkbd-key back';
+  back.textContent = '⌫';
+  back.dataset.action = 'backspace';
+  bottom.appendChild(back);
+
+  inner.appendChild(bottom);
+
+  inner.addEventListener('mousedown', e => e.preventDefault());
+  inner.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+  inner.addEventListener('click', handleKeyClick);
+}
+
+function handleKeyClick(e){
+  const key = e.target.closest('.vkbd-key');
+  if (!key) return;
+
+  const field = lastFocused || $('#body');
+
+  if (key.dataset.action === 'backspace'){
+    deleteAtCursor(field);
+  } else if (key.dataset.insert !== undefined){
+    insertAtCursor(field, key.dataset.insert);
+  }
+}
+
+function insertAtCursor(field, text){
+  if (!field) return;
+  const start = field.selectionStart ?? field.value.length;
+  const end = field.selectionEnd ?? field.value.length;
+  const before = field.value.slice(0, start);
+  const after = field.value.slice(end);
+  field.value = before + text + after;
+  const newPos = start + text.length;
+  field.selectionStart = field.selectionEnd = newPos;
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function deleteAtCursor(field){
+  if (!field) return;
+  const start = field.selectionStart ?? 0;
+  const end = field.selectionEnd ?? 0;
+  if (start === end && start > 0){
+    field.value = field.value.slice(0, start - 1) + field.value.slice(start);
+    field.selectionStart = field.selectionEnd = start - 1;
+  } else if (start !== end){
+    field.value = field.value.slice(0, start) + field.value.slice(end);
+    field.selectionStart = field.selectionEnd = start;
+  }
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function applyVkbd(){
+  const vkbd = $('#vkbd');
+  const toggle = $('#vkbdToggle');
+  const icon = $('#vkbdToggleIcon');
+  const sub = $('#vkbdToggleSub');
+
+  vkbd.classList.toggle('show', state.vkbd);
+  vkbd.setAttribute('aria-hidden', state.vkbd ? 'false' : 'true');
+  document.body.classList.toggle('vkbd-open', state.vkbd);
+  toggle.classList.toggle('on', state.vkbd);
+  icon.textContent = state.vkbd ? '✕' : '⌨';
+  sub.textContent = state.vkbd ? 'Tap to hide' : 'Tap to show';
+
+  // Move wax seal above keyboard when open
+  const seal = document.querySelector('.seal-wrap');
+  if (seal){
+    const h = vkbd.offsetHeight || 0;
+    seal.style.bottom = state.vkbd ? (22 + h + 12) + 'px' : '';
+  }
+}
+
+/* ============================================================
    BIND
    ============================================================ */
 function bind(){
-  // Fill font dropdown
   const sel = $('#fontSelect');
   FONTS.forEach(f => {
     const o = document.createElement('option');
@@ -909,28 +1187,24 @@ function bind(){
     sel.appendChild(o);
   });
 
-  // Hamburger / overlay
   $('#hamburger').addEventListener('click', toggleDrawer);
   $('#overlay').addEventListener('click', closeDrawer);
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeDrawer();
   });
 
-  // Font
   sel.addEventListener('change', e => {
     state.font = e.target.value;
     applyPrefs();
     persist();
   });
 
-  // Size
   $('#sizeRange').addEventListener('input', e => {
     state.size = +e.target.value;
     applyPrefs();
     saveSoon();
   });
 
-  // Theme
   $('#themes').addEventListener('click', e => {
     const btn = e.target.closest('.theme-btn');
     if (!btn) return;
@@ -939,7 +1213,9 @@ function bind(){
     persist();
   });
 
-  // Title / body
+  $('#title').addEventListener('focus', () => { lastFocused = $('#title'); });
+  $('#body').addEventListener('focus',  () => { lastFocused = $('#body'); });
+
   $('#title').addEventListener('input', e => {
     const n = current(); if (!n) return;
     n.title = e.target.value;
@@ -954,7 +1230,12 @@ function bind(){
     saveSoon();
   });
 
-  // New note
+  $('#vkbdToggle').addEventListener('click', () => {
+    state.vkbd = !state.vkbd;
+    applyVkbd();
+    persist();
+  });
+
   $('#newNote').addEventListener('click', () => {
     const n = { id: uid(), title: '', body: '', updated: Date.now() };
     state.notes.unshift(n);
@@ -963,7 +1244,6 @@ function bind(){
     setTimeout(() => $('#title').focus(), 350);
   });
 
-  // Delete note
   $('#delNote').addEventListener('click', () => {
     const n = current(); if (!n) return;
     if (!confirm('Delete this note permanently?')) return;
@@ -975,7 +1255,6 @@ function bind(){
     openNote(state.activeId);
   });
 
-  // Export
   $('#exportBtn').addEventListener('click', () => {
     const n = current(); if (!n) return;
     const text = (n.title.trim() ? n.title.trim() + '\n\n' : '') + n.body;
@@ -991,7 +1270,6 @@ function bind(){
     setTimeout(() => URL.revokeObjectURL(a.href), 1500);
   });
 
-  // Import
   $('#importBtn').addEventListener('click', () => $('#fileInput').click());
   $('#fileInput').addEventListener('change', e => {
     const f = e.target.files[0];
@@ -1014,7 +1292,6 @@ function bind(){
     e.target.value = '';
   });
 
-  // Keyboard shortcuts
   document.addEventListener('keydown', e => {
     const mod = e.ctrlKey || e.metaKey;
     if (mod && e.key.toLowerCase() === 's'){
@@ -1027,15 +1304,21 @@ function bind(){
       $('#newNote').click();
     }
   });
+
+  window.addEventListener('resize', () => {
+    if (state.vkbd) applyVkbd();
+  });
 }
 
 /* ============================================================
    BOOT
    ============================================================ */
 load();
+buildKeyboard();
 bind();
 applyPrefs();
 openNote(state.activeId);
+applyVkbd();
 </script>
 </body>
 </html>
